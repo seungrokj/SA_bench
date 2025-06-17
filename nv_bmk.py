@@ -19,7 +19,7 @@ elif args.gpu == 'h200':
     MODEL_DIR= '/scratch1/models'
     assert os.path.exists(MODEL_DIR)
 elif args.gpu == 'b200':
-    MODEL_DIR=""
+    MODEL_DIR='/mnt/nvme2n1/models'
     assert os.path.exists(MODEL_DIR)
 # Notice, END
 
@@ -48,7 +48,7 @@ def launch_bmk_llama(model_name, input_len, output_len, tp_size, max_concurrency
         return
 
     network_name = 'bmk-net'
-    server_name = 'bmk-server'
+    server_name = 'bmk-server2'
     port = 8100
     image_name = 'vllm/vllm-openai:v0.9.1'
     image_name_client = 'rocm/pytorch-private:vllm-openai_v0.9.1_client'
@@ -90,7 +90,8 @@ docker run --rm -t --network {network_name} --name bmk-client \
 
 docker stop {server_name}; docker network rm {network_name}
 '''
-    subprocess.run(script, shell=True, check=True)
+    print(script)
+    #subprocess.run(script, shell=True, check=True)
 
 
 def launch_bmk_deepseek(input_len, output_len, tp_size, max_concurrency, max_num_seqs):
@@ -200,18 +201,18 @@ elif args.gpu == 'b200':
     for input_len, output_len in [(1024, 1024), (1024, 4096), (4096, 1024)]:
         t_s = time.time()
 
-        if 1:
+        if 0:
             # LLaMA 70B
             #for tp_size in [2, 4, 8]:
             for tp_size in [8]:
                 for max_concurrency in [4, 8, 16, 32, 64, 128, 256]:
                     launch_bmk_llama('/model/Llama-3.1-70B-Instruct', input_len, output_len, tp_size, max_concurrency, max_concurrency, max_num_batched_tokens)
-        if 0:
+        if 1:
             # LLaMA 405B FP8
             #for tp_size in [4, 8]:
             for tp_size in [8]:
                 for max_concurrency in [4, 8, 16, 32, 64, 128, 256]:
-                    launch_bmk_llama('/model/Meta-Llama-3.1-405B-FP8/', input_len, output_len, tp_size, max_concurrency, max_concurrency, max_num_batched_tokens)
+                    launch_bmk_llama('/model/Llama-3.1-405B-Instruct-FP4', input_len, output_len, tp_size, max_concurrency, max_concurrency, max_num_batched_tokens)
 
         if 0:
             # DeepseekV3
