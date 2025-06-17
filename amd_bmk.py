@@ -16,8 +16,10 @@ if args.gpu == 'mi300x':
     assert os.path.exists(MODEL_DIR)
 elif args.gpu == 'mi325x':
     MODEL_DIR=""
+    assert os.path.exists(MODEL_DIR)
 elif args.gpu == 'mi355x':
     MODEL_DIR=""
+    assert os.path.exists(MODEL_DIR)
 # Notice, END
 
 if args.print_results:

@@ -12,13 +12,15 @@ args = parser.parse_args()
 
 import os
 # Notice, Change model directory, START
-if args.gpu == 'mi300x':
+if args.gpu == 'h100':
+    MODEL_DIR= '/scratch/huggingface_models'
+    assert os.path.exists(MODEL_DIR)
+elif args.gpu == 'h200':
     MODEL_DIR= '/scratch1/models'
     assert os.path.exists(MODEL_DIR)
-elif args.gpu == 'mi325x':
+elif args.gpu == 'b200':
     MODEL_DIR=""
-elif args.gpu == 'mi355x':
-    MODEL_DIR=""
+    assert os.path.exists(MODEL_DIR)
 # Notice, END
 
 if args.print_results:
