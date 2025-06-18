@@ -47,7 +47,7 @@ def launch_bmk_trt(model_name, input_len, output_len, tp_size, max_concurrency, 
         return
 
     network_name = 'bmk-net'
-    server_name = 'bmk-server3'
+    server_name = 'bmk-server'
     port = 8100
     image_name = 'nvcr.io/nvidia/tensorrt-llm/release:0.21.0rc1'
     image_name_client = 'rocm/pytorch-private:vllm-openai_v0.9.1_client'
@@ -87,12 +87,14 @@ docker stop {server_name}; docker network rm {network_name}
 if args.gpu == 'b200':
     #for input_len, output_len, max_num_tokens in [(1024, 1024, 2500), (1024, 4096, 5500), (4096, 1024, 5500)]:
     for input_len, output_len, max_num_tokens in [(1024, 1024, 2500)]:
-        if 0:
-            for tp_size in [2, 4, 8]:
+        if 1:
+            #for tp_size in [2, 4, 8]:
+            for tp_size in [8]:
                 for max_concurrency in [4, 8, 16, 32, 64, 128, 256]:
-                    launch_bmk_trt('meta-llama/Llama-3.1-70B', input_len, output_len, tp_size, max_concurrency, max_num_tokens)
-        #for tp_size in [4, 8]:
-        for tp_size in [8]:
-            #for max_concurrency in [4, 8, 16, 32, 64, 128, 256]:
-            for max_concurrency in [16, 32, 64, 128, 256]:
-                launch_bmk_trt('/model/Llama-3.1-405B-Instruct-FP4', input_len, output_len, tp_size, max_concurrency, max_num_tokens)
+                    launch_bmk_trt('/model/Llama-3.3-70B-Instruct-FP4', input_len, output_len, tp_size, max_concurrency, max_num_tokens)
+        if 0:
+            #for tp_size in [4, 8]:
+            for tp_size in [8]:
+                #for max_concurrency in [4, 8, 16, 32, 64, 128, 256]:
+                for max_concurrency in [16, 32, 64, 128, 256]:
+                    launch_bmk_trt('/model/Llama-3.1-405B-Instruct-FP4', input_len, output_len, tp_size, max_concurrency, max_num_tokens)
